@@ -38,10 +38,26 @@ jobs:
     #- name: Flutter Build Web
     #  run: flutter build web --release 
 
-    - run: flutter build web --release --base-href "${{ steps.pages.outputs.base_path }}/"
-    - uses: actions/upload-pages-artifact@v4
-      with:
-        path: build/web
+    # Step 5: Deploy to Firebase Hosting
+    #- name: Deploy to Firebase Hosting
+    #  uses: FirebaseExtended/action-hosting-deploy@v0
+    #  with:
+    #    repoToken: '${{ secrets.GITHUB_TOKEN }}'
+    #    firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+    #    channelId: live # 'live' deploys directly to your production URL
+    #    projectId: terceirometro-3fe61 # Replace with your Firebase Project ID
+  
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      # ... checkout e instalação do Flutter ...
+      - id: pages
+        uses: actions/configure-pages@v5
+      - run: flutter build web --release --base-href "${{ steps.pages.outputs.base_path }}/"
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: build/web
 
   deploy:
     needs: build
@@ -55,12 +71,3 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
-
-    # Step 5: Deploy to Firebase Hosting
-    #- name: Deploy to Firebase Hosting
-    #  uses: FirebaseExtended/action-hosting-deploy@v0
-    #  with:
-    #    repoToken: '${{ secrets.GITHUB_TOKEN }}'
-    #    firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
-    #    channelId: live # 'live' deploys directly to your production URL
-    #    projectId: terceirometro-3fe61 # Replace with your Firebase Project ID
