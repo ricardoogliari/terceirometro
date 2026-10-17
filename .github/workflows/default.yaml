@@ -48,7 +48,7 @@ jobs:
     #    projectId: terceirometro-3fe61 # Replace with your Firebase Project ID
   
   build:
-    needs: test
+    needs: Flutter Test
     runs-on: ubuntu-latest
     steps:
       # ... checkout e instalação do Flutter ...
