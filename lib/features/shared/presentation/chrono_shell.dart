@@ -3,11 +3,7 @@ import 'package:flutter/material.dart';
 enum ChronoPage { tracker, report }
 
 class ChronoShell extends StatelessWidget {
-  const ChronoShell({
-    required this.page,
-    required this.child,
-    super.key,
-  });
+  const ChronoShell({required this.page, required this.child, super.key});
 
   final ChronoPage page;
   final Widget child;
@@ -87,8 +83,14 @@ class _Sidebar extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('ChronoTrack', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-                  Text('v1.0.4  •  pro', style: TextStyle(color: Color(0xFF9298AD), fontSize: 12)),
+                  Text(
+                    'ChronoTrack',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                  ),
+                  Text(
+                    'v1.0.4  •  pro',
+                    style: TextStyle(color: Color(0xFF9298AD), fontSize: 12),
+                  ),
                 ],
               ),
             ],
@@ -120,7 +122,10 @@ class _Sidebar extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Atalhos Rápidos', style: TextStyle(fontWeight: FontWeight.w600)),
+                  Text(
+                    'Atalhos Rápidos',
+                    style: TextStyle(fontWeight: FontWeight.w600),
+                  ),
                   SizedBox(height: 12),
                   _Shortcut(label: 'Alternar Timer', keyLabel: 'Space'),
                   SizedBox(height: 8),
@@ -134,7 +139,10 @@ class _Sidebar extends StatelessWidget {
             children: [
               Icon(Icons.circle, size: 9, color: Color(0xFF42D6A3)),
               SizedBox(width: 8),
-              Text('Sincronização Cloud', style: TextStyle(color: Color(0xFF9298AD))),
+              Text(
+                'Sincronização Cloud',
+                style: TextStyle(color: Color(0xFF9298AD)),
+              ),
             ],
           ),
         ],
@@ -161,11 +169,17 @@ class _TopBar extends StatelessWidget {
           if (compact) ...[
             const _BrandMark(),
             const SizedBox(width: 10),
-            const Text('ChronoTrack', style: TextStyle(fontWeight: FontWeight.w700)),
+            const Text(
+              'ChronoTrack',
+              style: TextStyle(fontWeight: FontWeight.w700),
+            ),
           ] else ...[
             const _StatusPill(),
             const SizedBox(width: 18),
-            const SizedBox(height: 32, child: VerticalDivider(color: Color(0xFF303950))),
+            const SizedBox(
+              height: 32,
+              child: VerticalDivider(color: Color(0xFF303950)),
+            ),
             const SizedBox(width: 18),
             const Text('4h 32m', style: TextStyle(fontFamily: 'monospace')),
             const SizedBox(width: 12),
@@ -194,7 +208,10 @@ class _TopBar extends StatelessWidget {
             icon: const Icon(Icons.help_outline),
           ),
           if (!compact) ...[
-            const SizedBox(height: 30, child: VerticalDivider(color: Color(0xFF303950))),
+            const SizedBox(
+              height: 30,
+              child: VerticalDivider(color: Color(0xFF303950)),
+            ),
             const CircleAvatar(
               radius: 18,
               backgroundColor: Color(0xFF344058),
@@ -206,7 +223,10 @@ class _TopBar extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Dev Pro', style: TextStyle(fontWeight: FontWeight.w600)),
-                Text('Plano Foco', style: TextStyle(color: Color(0xFF9298AD), fontSize: 12)),
+                Text(
+                  'Plano Foco',
+                  style: TextStyle(color: Color(0xFF9298AD), fontSize: 12),
+                ),
               ],
             ),
           ],
@@ -246,7 +266,9 @@ class _NavItem extends StatelessWidget {
               children: [
                 Icon(icon, color: color),
                 const SizedBox(width: 12),
-                Expanded(child: Text(label, style: TextStyle(color: color))),
+                Expanded(
+                  child: Text(label, style: TextStyle(color: color)),
+                ),
               ],
             ),
           ),
@@ -288,7 +310,14 @@ class _StatusPill extends StatelessWidget {
         children: [
           Icon(Icons.circle, size: 9, color: Color(0xFF42D6A3)),
           SizedBox(width: 7),
-          Text('EM ANDAMENTO', style: TextStyle(color: Color(0xFF42D6A3), fontWeight: FontWeight.w700, fontSize: 12)),
+          Text(
+            'EM ANDAMENTO',
+            style: TextStyle(
+              color: Color(0xFF42D6A3),
+              fontWeight: FontWeight.w700,
+              fontSize: 12,
+            ),
+          ),
         ],
       ),
     );
@@ -305,8 +334,16 @@ class _Shortcut extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: Text(label, style: const TextStyle(color: Color(0xFFB7BDD2)))),
-        Text(keyLabel, style: const TextStyle(fontFamily: 'monospace', color: Color(0xFFB7BDD2))),
+        Expanded(
+          child: Text(label, style: const TextStyle(color: Color(0xFFB7BDD2))),
+        ),
+        Text(
+          keyLabel,
+          style: const TextStyle(
+            fontFamily: 'monospace',
+            color: Color(0xFFB7BDD2),
+          ),
+        ),
       ],
     );
   }

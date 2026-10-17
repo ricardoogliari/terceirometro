@@ -61,26 +61,39 @@ class ReportView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const Text('Compatível com Google Sheets, Notion, Jira e Excel', style: TextStyle(color: Color(0xFF9298AD))),
+                const Text(
+                  'Compatível com Google Sheets, Notion, Jira e Excel',
+                  style: TextStyle(color: Color(0xFF9298AD)),
+                ),
                 const SizedBox(height: 16),
                 SelectableText(
                   summary,
                   style: const TextStyle(fontFamily: 'monospace', height: 1.6),
                 ),
                 const SizedBox(height: 14),
-                const Text('Formatado para transferência com delimitadores e horários.', style: TextStyle(color: Color(0xFF9298AD))),
+                const Text(
+                  'Formatado para transferência com delimitadores e horários.',
+                  style: TextStyle(color: Color(0xFF9298AD)),
+                ),
               ],
             ),
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext), child: const Text('Fechar')),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Fechar'),
+          ),
           FilledButton.icon(
             onPressed: () async {
               await Clipboard.setData(ClipboardData(text: summary));
               if (!dialogContext.mounted) return;
               Navigator.pop(dialogContext);
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Resumo copiado para a área de transferência')));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Resumo copiado para a área de transferência'),
+                ),
+              );
             },
             icon: const Icon(Icons.copy),
             label: const Text('Copiar para Área de Transferência'),
@@ -104,22 +117,42 @@ class ReportView extends StatelessWidget {
               TextField(
                 controller: titleController,
                 autofocus: true,
-                decoration: const InputDecoration(labelText: 'Tarefa / descrição'),
+                decoration: const InputDecoration(
+                  labelText: 'Tarefa / descrição',
+                ),
               ),
               const SizedBox(height: 14),
               DropdownButtonFormField<String>(
                 initialValue: category,
                 decoration: const InputDecoration(labelText: 'Categoria'),
-                items: const ['Desenvolvimento', 'Reunião', 'Code Review', 'Design']
-                    .map((value) => DropdownMenuItem(value: value, child: Text(value)))
-                    .toList(),
-                onChanged: (value) => setDialogState(() => category = value ?? category),
+                items:
+                    const [
+                          'Desenvolvimento',
+                          'Reunião',
+                          'Code Review',
+                          'Design',
+                        ]
+                        .map(
+                          (value) => DropdownMenuItem(
+                            value: value,
+                            child: Text(value),
+                          ),
+                        )
+                        .toList(),
+                onChanged: (value) =>
+                    setDialogState(() => category = value ?? category),
               ),
             ],
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Cancelar')),
-            FilledButton(onPressed: () => Navigator.pop(dialogContext, true), child: const Text('Adicionar')),
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('Cancelar'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: const Text('Adicionar'),
+            ),
           ],
         ),
       ),
@@ -147,17 +180,31 @@ class _ReportHeading extends StatelessWidget {
         const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Diário de Tarefas', style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700)),
+            Text(
+              'Diário de Tarefas',
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
+            ),
             SizedBox(height: 4),
-            Text('24 de outubro de 2024  •  6 sessões gravadas', style: TextStyle(color: Color(0xFF9298AD))),
+            Text(
+              '24 de outubro de 2024  •  6 sessões gravadas',
+              style: TextStyle(color: Color(0xFF9298AD)),
+            ),
           ],
         ),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            OutlinedButton.icon(onPressed: onExport, icon: const Icon(Icons.copy), label: const Text('Exportar')),
+            OutlinedButton.icon(
+              onPressed: onExport,
+              icon: const Icon(Icons.copy),
+              label: const Text('Exportar'),
+            ),
             const SizedBox(width: 8),
-            FilledButton.icon(onPressed: onAdd, icon: const Icon(Icons.add), label: const Text('Adicionar Registro Manual')),
+            FilledButton.icon(
+              onPressed: onAdd,
+              icon: const Icon(Icons.add),
+              label: const Text('Adicionar Registro Manual'),
+            ),
           ],
         ),
       ],
@@ -173,7 +220,11 @@ class _Metrics extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
-    final columns = width >= 1200 ? 4 : width >= 700 ? 2 : 1;
+    final columns = width >= 1200
+        ? 4
+        : width >= 700
+        ? 2
+        : 1;
     return GridView.count(
       crossAxisCount: columns,
       shrinkWrap: true,
@@ -216,7 +267,13 @@ class _Metrics extends StatelessWidget {
 }
 
 class _MetricCard extends StatelessWidget {
-  const _MetricCard({required this.label, required this.value, required this.detail, required this.icon, required this.color});
+  const _MetricCard({
+    required this.label,
+    required this.value,
+    required this.detail,
+    required this.icon,
+    required this.color,
+  });
 
   final String label;
   final String value;
@@ -233,9 +290,34 @@ class _MetricCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(children: [Icon(icon, color: color), const SizedBox(width: 8), Expanded(child: Text(label, style: const TextStyle(fontSize: 11, color: Color(0xFF9298AD), fontWeight: FontWeight.w600)))]),
-            Text(value, style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w700, fontFamily: 'monospace')),
-            Text(detail, style: const TextStyle(color: Color(0xFF9298AD), fontSize: 12)),
+            Row(
+              children: [
+                Icon(icon, color: color),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFF9298AD),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'monospace',
+              ),
+            ),
+            Text(
+              detail,
+              style: const TextStyle(color: Color(0xFF9298AD), fontSize: 12),
+            ),
           ],
         ),
       ),
@@ -256,29 +338,91 @@ class _Timeline extends StatelessWidget {
               children: [
                 Icon(Icons.timeline, color: Color(0xFF42D6A3)),
                 SizedBox(width: 9),
-                Expanded(child: Text('Distribuição Contínua do Dia', style: TextStyle(fontWeight: FontWeight.w700))),
-                Text('08:00 - 18:00', style: TextStyle(color: Color(0xFF9298AD), fontFamily: 'monospace')),
+                Expanded(
+                  child: Text(
+                    'Distribuição Contínua do Dia',
+                    style: TextStyle(fontWeight: FontWeight.w700),
+                  ),
+                ),
+                Text(
+                  '08:00 - 18:00',
+                  style: TextStyle(
+                    color: Color(0xFF9298AD),
+                    fontFamily: 'monospace',
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 18),
             LayoutBuilder(
               builder: (context, constraints) {
                 final narrow = constraints.maxWidth < 600;
-                final labels = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+                final labels = [
+                  '08:00',
+                  '09:00',
+                  '10:00',
+                  '11:00',
+                  '12:00',
+                  '13:00',
+                  '14:00',
+                  '15:00',
+                  '16:00',
+                  '17:00',
+                  '18:00',
+                ];
                 return Column(
                   children: [
                     if (!narrow)
-                      Row(children: [for (final label in labels) Expanded(child: Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 10, color: Color(0xFF9298AD), fontFamily: 'monospace')))]),
+                      Row(
+                        children: [
+                          for (final label in labels)
+                            Expanded(
+                              child: Text(
+                                label,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: Color(0xFF9298AD),
+                                  fontFamily: 'monospace',
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
                     const SizedBox(height: 8),
                     if (narrow)
                       const Column(
                         children: [
-                          _TimelineItem(time: '08:00 - 09:15', task: 'Refatoração de State Management', color: Color(0xFF5B4BEB)),
-                          _TimelineItem(time: '09:30 - 11:15', task: 'Design Tokens M3', color: Color(0xFF42D6A3)),
-                          _TimelineItem(time: '11:15 - 11:30', task: 'Alinhamento da equipe', color: Color(0xFFF5AE4E)),
-                          _TimelineItem(time: '11:30 - 12:15', task: 'Code Review PR #142', color: Color(0xFF72B7FF)),
-                          _TimelineItem(time: '13:45 - 14:45', task: 'Planejamento Estratégico Q4', color: Color(0xFFF5AE4E)),
-                          _TimelineItem(time: '15:00 - 15:33', task: 'Fix Memory Leak', color: Color(0xFF5B4BEB)),
+                          _TimelineItem(
+                            time: '08:00 - 09:15',
+                            task: 'Refatoração de State Management',
+                            color: Color(0xFF5B4BEB),
+                          ),
+                          _TimelineItem(
+                            time: '09:30 - 11:15',
+                            task: 'Design Tokens M3',
+                            color: Color(0xFF42D6A3),
+                          ),
+                          _TimelineItem(
+                            time: '11:15 - 11:30',
+                            task: 'Alinhamento da equipe',
+                            color: Color(0xFFF5AE4E),
+                          ),
+                          _TimelineItem(
+                            time: '11:30 - 12:15',
+                            task: 'Code Review PR #142',
+                            color: Color(0xFF72B7FF),
+                          ),
+                          _TimelineItem(
+                            time: '13:45 - 14:45',
+                            task: 'Planejamento Estratégico Q4',
+                            color: Color(0xFFF5AE4E),
+                          ),
+                          _TimelineItem(
+                            time: '15:00 - 15:33',
+                            task: 'Fix Memory Leak',
+                            color: Color(0xFF5B4BEB),
+                          ),
                         ],
                       )
                     else
@@ -286,13 +430,76 @@ class _Timeline extends StatelessWidget {
                         height: 115,
                         child: Stack(
                           children: [
-                            Positioned(left: 0, top: 14, width: constraints.maxWidth * .13, height: 28, child: const _TimelineBar(label: 'State Mgmt', color: Color(0xFF5B4BEB))),
-                            Positioned(left: constraints.maxWidth * .15, top: 14, width: constraints.maxWidth * .18, height: 28, child: const _TimelineBar(label: 'M3 Tokens', color: Color(0xFF42D6A3))),
-                            Positioned(left: constraints.maxWidth * .33, top: 14, width: constraints.maxWidth * .03, height: 28, child: const _TimelineBar(label: 'Sync', color: Color(0xFFF5AE4E))),
-                            Positioned(left: constraints.maxWidth * .36, top: 14, width: constraints.maxWidth * .08, height: 28, child: const _TimelineBar(label: 'PR #142', color: Color(0xFF72B7FF))),
-                            Positioned(left: constraints.maxWidth * .57, top: 14, width: constraints.maxWidth * .10, height: 28, child: const _TimelineBar(label: 'Planning', color: Color(0xFFF5AE4E))),
-                            Positioned(left: constraints.maxWidth * .70, top: 14, width: constraints.maxWidth * .06, height: 28, child: const _TimelineBar(label: 'Fix', color: Color(0xFF5B4BEB))),
-                            Positioned(left: constraints.maxWidth * .40, top: 60, width: constraints.maxWidth * .13, height: 28, child: const _TimelineBar(label: 'Intervalo / Almoço', color: Color(0xFF303950))),
+                            Positioned(
+                              left: 0,
+                              top: 14,
+                              width: constraints.maxWidth * .13,
+                              height: 28,
+                              child: const _TimelineBar(
+                                label: 'State Mgmt',
+                                color: Color(0xFF5B4BEB),
+                              ),
+                            ),
+                            Positioned(
+                              left: constraints.maxWidth * .15,
+                              top: 14,
+                              width: constraints.maxWidth * .18,
+                              height: 28,
+                              child: const _TimelineBar(
+                                label: 'M3 Tokens',
+                                color: Color(0xFF42D6A3),
+                              ),
+                            ),
+                            Positioned(
+                              left: constraints.maxWidth * .33,
+                              top: 14,
+                              width: constraints.maxWidth * .03,
+                              height: 28,
+                              child: const _TimelineBar(
+                                label: 'Sync',
+                                color: Color(0xFFF5AE4E),
+                              ),
+                            ),
+                            Positioned(
+                              left: constraints.maxWidth * .36,
+                              top: 14,
+                              width: constraints.maxWidth * .08,
+                              height: 28,
+                              child: const _TimelineBar(
+                                label: 'PR #142',
+                                color: Color(0xFF72B7FF),
+                              ),
+                            ),
+                            Positioned(
+                              left: constraints.maxWidth * .57,
+                              top: 14,
+                              width: constraints.maxWidth * .10,
+                              height: 28,
+                              child: const _TimelineBar(
+                                label: 'Planning',
+                                color: Color(0xFFF5AE4E),
+                              ),
+                            ),
+                            Positioned(
+                              left: constraints.maxWidth * .70,
+                              top: 14,
+                              width: constraints.maxWidth * .06,
+                              height: 28,
+                              child: const _TimelineBar(
+                                label: 'Fix',
+                                color: Color(0xFF5B4BEB),
+                              ),
+                            ),
+                            Positioned(
+                              left: constraints.maxWidth * .40,
+                              top: 60,
+                              width: constraints.maxWidth * .13,
+                              height: 28,
+                              child: const _TimelineBar(
+                                label: 'Intervalo / Almoço',
+                                color: Color(0xFF303950),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -301,12 +508,16 @@ class _Timeline extends StatelessWidget {
               },
             ),
             const SizedBox(height: 10),
-            const Wrap(spacing: 14, runSpacing: 6, children: [
-              _Legend(label: 'Engenharia', color: Color(0xFF5B4BEB)),
-              _Legend(label: 'Design System', color: Color(0xFF42D6A3)),
-              _Legend(label: 'Reuniões', color: Color(0xFFF5AE4E)),
-              _Legend(label: 'Disponível', color: Color(0xFF303950)),
-            ]),
+            const Wrap(
+              spacing: 14,
+              runSpacing: 6,
+              children: [
+                _Legend(label: 'Engenharia', color: Color(0xFF5B4BEB)),
+                _Legend(label: 'Design System', color: Color(0xFF42D6A3)),
+                _Legend(label: 'Reuniões', color: Color(0xFFF5AE4E)),
+                _Legend(label: 'Disponível', color: Color(0xFF303950)),
+              ],
+            ),
           ],
         ),
       ),
@@ -315,7 +526,11 @@ class _Timeline extends StatelessWidget {
 }
 
 class _TimelineItem extends StatelessWidget {
-  const _TimelineItem({required this.time, required this.task, required this.color});
+  const _TimelineItem({
+    required this.time,
+    required this.task,
+    required this.color,
+  });
 
   final String time;
   final String task;
@@ -323,12 +538,19 @@ class _TimelineItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-        dense: true,
-        contentPadding: EdgeInsets.zero,
-        leading: Text(time, style: const TextStyle(color: Color(0xFF9298AD), fontFamily: 'monospace', fontSize: 11)),
-        title: Text(task, style: const TextStyle(fontSize: 13)),
-        trailing: Container(width: 4, height: 24, color: color),
-      );
+    dense: true,
+    contentPadding: EdgeInsets.zero,
+    leading: Text(
+      time,
+      style: const TextStyle(
+        color: Color(0xFF9298AD),
+        fontFamily: 'monospace',
+        fontSize: 11,
+      ),
+    ),
+    title: Text(task, style: const TextStyle(fontSize: 13)),
+    trailing: Container(width: 4, height: 24, color: color),
+  );
 }
 
 class _TimelineBar extends StatelessWidget {
@@ -339,11 +561,20 @@ class _TimelineBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        alignment: Alignment.centerLeft,
-        decoration: BoxDecoration(color: color.withValues(alpha: .75), borderRadius: BorderRadius.circular(4)),
-        child: Text(label, maxLines: 1, overflow: TextOverflow.fade, softWrap: false, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600)),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 8),
+    alignment: Alignment.centerLeft,
+    decoration: BoxDecoration(
+      color: color.withValues(alpha: .75),
+      borderRadius: BorderRadius.circular(4),
+    ),
+    child: Text(
+      label,
+      maxLines: 1,
+      overflow: TextOverflow.fade,
+      softWrap: false,
+      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+    ),
+  );
 }
 
 class _Legend extends StatelessWidget {
@@ -353,11 +584,17 @@ class _Legend extends StatelessWidget {
   final Color color;
 
   @override
-  Widget build(BuildContext context) => Row(mainAxisSize: MainAxisSize.min, children: [
-        Icon(Icons.circle, size: 9, color: color),
-        const SizedBox(width: 6),
-        Text(label, style: const TextStyle(color: Color(0xFF9298AD), fontSize: 11)),
-      ]);
+  Widget build(BuildContext context) => Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(Icons.circle, size: 9, color: color),
+      const SizedBox(width: 6),
+      Text(
+        label,
+        style: const TextStyle(color: Color(0xFF9298AD), fontSize: 11),
+      ),
+    ],
+  );
 }
 
 class _ReportEntries extends StatelessWidget {
@@ -374,10 +611,20 @@ class _ReportEntries extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(18),
-            child: Row(children: [
-              const Expanded(child: Text('Registros do Dia', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700))),
-              Text('${entries.length} sessões gravadas', style: const TextStyle(color: Color(0xFF9298AD))),
-            ]),
+            child: Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    'Registros do Dia',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                  ),
+                ),
+                Text(
+                  '${entries.length} sessões gravadas',
+                  style: const TextStyle(color: Color(0xFF9298AD)),
+                ),
+              ],
+            ),
           ),
           for (final entry in entries) _ReportEntryRow(entry: entry),
         ],
@@ -395,16 +642,39 @@ class _ReportEntryRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-      decoration: const BoxDecoration(border: Border(top: BorderSide(color: Color(0xFF252E43)))),
+      decoration: const BoxDecoration(
+        border: Border(top: BorderSide(color: Color(0xFF252E43))),
+      ),
       child: Wrap(
         alignment: WrapAlignment.spaceBetween,
         crossAxisAlignment: WrapCrossAlignment.center,
         runSpacing: 6,
         children: [
-          SizedBox(width: 480, child: Text(entry.title, style: const TextStyle(fontWeight: FontWeight.w500))),
-          Text('${entry.project}  •  ${entry.category}', style: const TextStyle(color: Color(0xFF9298AD))),
-          Text('${entry.start} — ${entry.end}', style: const TextStyle(fontFamily: 'monospace', color: Color(0xFFB7BDD2))),
-          Text(_formatHours(entry.duration), style: const TextStyle(fontFamily: 'monospace', fontWeight: FontWeight.w600)),
+          SizedBox(
+            width: 480,
+            child: Text(
+              entry.title,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+          Text(
+            '${entry.project}  •  ${entry.category}',
+            style: const TextStyle(color: Color(0xFF9298AD)),
+          ),
+          Text(
+            '${entry.start} — ${entry.end}',
+            style: const TextStyle(
+              fontFamily: 'monospace',
+              color: Color(0xFFB7BDD2),
+            ),
+          ),
+          Text(
+            _formatHours(entry.duration),
+            style: const TextStyle(
+              fontFamily: 'monospace',
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ],
       ),
     );

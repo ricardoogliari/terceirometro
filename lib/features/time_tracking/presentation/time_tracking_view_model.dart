@@ -18,7 +18,11 @@ class TimeTrackingViewModel extends ChangeNotifier {
   final TimeEntryRepository _repository;
   late final Timer _ticker;
   List<TimeEntry> _entries = const [];
-  Duration _sessionDuration = const Duration(hours: 1, minutes: 42, seconds: 19);
+  Duration _sessionDuration = const Duration(
+    hours: 1,
+    minutes: 42,
+    seconds: 19,
+  );
   bool _isRunning = true;
   bool _automaticLockEnabled = true;
   bool _isLoading = true;
@@ -37,13 +41,14 @@ class TimeTrackingViewModel extends ChangeNotifier {
       (_sessionDuration - const Duration(hours: 1, minutes: 42, seconds: 19));
   Duration get dailyLimit => const Duration(hours: 8);
   Duration get remainingTime => dailyLimit - totalWorked;
-  double get completion => (totalWorked.inSeconds / dailyLimit.inSeconds)
-      .clamp(0.0, 1.0);
+  double get completion =>
+      (totalWorked.inSeconds / dailyLimit.inSeconds).clamp(0.0, 1.0);
   Duration get registeredTime => const Duration(hours: 3, minutes: 36);
 
   List<TimeEntry> get recentEntries => entries.take(3).toList(growable: false);
-  List<TimeEntry> get chronologicalEntries => List<TimeEntry>.of(entries)
-    ..sort((first, second) => first.start.compareTo(second.start));
+  List<TimeEntry> get chronologicalEntries =>
+      List<TimeEntry>.of(entries)
+        ..sort((first, second) => first.start.compareTo(second.start));
 
   Future<void> load() async {
     _isLoading = true;

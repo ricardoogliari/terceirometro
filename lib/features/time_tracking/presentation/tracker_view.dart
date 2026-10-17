@@ -55,15 +55,9 @@ class _Overview extends StatelessWidget {
     final focusCard = _LimitCard(viewModel: viewModel);
     final alertCard = _OvertimeCard(viewModel: viewModel);
     return narrow
-        ? Column(
-            children: [
-              focusCard,
-              const SizedBox(height: 16),
-              alertCard,
-            ],
-          )
+        ? Column(children: [focusCard, const SizedBox(height: 16), alertCard])
         : Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(flex: 7, child: focusCard),
               const SizedBox(width: 18),
@@ -95,12 +89,27 @@ class _LimitCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Carga Horária Diária', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
-                      Text('Meta fixa: 08:00:00  •  Limite CLT / Contrato', style: TextStyle(color: Color(0xFF9298AD), fontSize: 12)),
+                      Text(
+                        'Carga Horária Diária',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Text(
+                        'Meta fixa: 08:00:00  •  Limite CLT / Contrato',
+                        style: TextStyle(
+                          color: Color(0xFF9298AD),
+                          fontSize: 12,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                _Pill(label: '${(progress * 100).toStringAsFixed(1)}% concluído', color: const Color(0xFF42D6A3)),
+                _Pill(
+                  label: '${(progress * 100).toStringAsFixed(1)}% concluído',
+                  color: const Color(0xFF42D6A3),
+                ),
               ],
             ),
             const SizedBox(height: 25),
@@ -111,11 +120,22 @@ class _LimitCard extends StatelessWidget {
               children: [
                 Text(
                   _formatHours(viewModel.totalWorked),
-                  style: const TextStyle(fontSize: 44, fontWeight: FontWeight.w700, height: 1),
+                  style: const TextStyle(
+                    fontSize: 44,
+                    fontWeight: FontWeight.w700,
+                    height: 1,
+                  ),
                 ),
-                const Text('/ 08h 00m', style: TextStyle(color: Color(0xFF9298AD), fontFamily: 'monospace')),
+                const Text(
+                  '/ 08h 00m',
+                  style: TextStyle(
+                    color: Color(0xFF9298AD),
+                    fontFamily: 'monospace',
+                  ),
+                ),
                 _Pill(
-                  label: '${_formatHours(viewModel.remainingTime)} restantes para atingir o teto',
+                  label:
+                      '${_formatHours(viewModel.remainingTime)} restantes para atingir o teto',
                   color: const Color(0xFFF5AE4E),
                   icon: Icons.hourglass_bottom,
                 ),
@@ -137,10 +157,16 @@ class _LimitCard extends StatelessWidget {
               runSpacing: 6,
               children: [
                 _Milestone(label: '00:00 (Início)', color: Color(0xFF9298AD)),
-                _Milestone(label: '04:00 (Intervalo)', color: Color(0xFF9298AD)),
+                _Milestone(
+                  label: '04:00 (Intervalo)',
+                  color: Color(0xFF9298AD),
+                ),
                 _Milestone(label: '05:18 (Atual)', color: Color(0xFF42D6A3)),
                 _Milestone(label: '07:30 (Aviso)', color: Color(0xFFF5AE4E)),
-                _Milestone(label: '08:00 (Teto Máx.)', color: Color(0xFF9298AD)),
+                _Milestone(
+                  label: '08:00 (Teto Máx.)',
+                  color: Color(0xFF9298AD),
+                ),
               ],
             ),
           ],
@@ -166,15 +192,28 @@ class _OvertimeCard extends StatelessWidget {
             const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.notification_important_outlined, color: Color(0xFFF5AE4E), size: 28),
+                Icon(
+                  Icons.notification_important_outlined,
+                  color: Color(0xFFF5AE4E),
+                  size: 28,
+                ),
                 SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Proteção Contra Hora Extra', style: TextStyle(fontWeight: FontWeight.w700)),
+                      Text(
+                        'Proteção Contra Hora Extra',
+                        style: TextStyle(fontWeight: FontWeight.w700),
+                      ),
                       SizedBox(height: 8),
-                      Text('Alertas ao atingir 7h 45m para evitar passivo de horas excedentes.', style: TextStyle(color: Color(0xFFB7BDD2), height: 1.45)),
+                      Text(
+                        'Alertas ao atingir 7h 45m para evitar passivo de horas excedentes.',
+                        style: TextStyle(
+                          color: Color(0xFFB7BDD2),
+                          height: 1.45,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -184,7 +223,10 @@ class _OvertimeCard extends StatelessWidget {
             SwitchListTile.adaptive(
               contentPadding: const EdgeInsets.symmetric(horizontal: 10),
               title: const Text('Bloqueio Automático'),
-              subtitle: const Text('Notificar ao atingir 8h', style: TextStyle(color: Color(0xFF9298AD))),
+              subtitle: const Text(
+                'Notificar ao atingir 8h',
+                style: TextStyle(color: Color(0xFF9298AD)),
+              ),
               value: viewModel.automaticLockEnabled,
               onChanged: (_) => viewModel.toggleAutomaticLock(),
               activeTrackColor: const Color(0xFF00A982),
@@ -236,13 +278,29 @@ class _CurrentSessionState extends State<_CurrentSession> {
               children: [
                 _Pill(
                   label: viewModel.isRunning ? 'GRAVANDO TEMPO' : 'PAUSADO',
-                  color: viewModel.isRunning ? const Color(0xFF42D6A3) : const Color(0xFFF5AE4E),
+                  color: viewModel.isRunning
+                      ? const Color(0xFF42D6A3)
+                      : const Color(0xFFF5AE4E),
                   icon: Icons.circle,
                 ),
-                const Text('Sessão iniciada às 14:32', style: TextStyle(color: Color(0xFF9298AD), fontFamily: 'monospace')),
+                const Text(
+                  'Sessão iniciada às 14:32',
+                  style: TextStyle(
+                    color: Color(0xFF9298AD),
+                    fontFamily: 'monospace',
+                  ),
+                ),
                 const SizedBox(width: 4),
-                const Text('Projeto:', style: TextStyle(color: Color(0xFF9298AD))),
-                for (final category in ['Desenvolvimento', 'Reunião', 'Code Review', 'Design'])
+                const Text(
+                  'Projeto:',
+                  style: TextStyle(color: Color(0xFF9298AD)),
+                ),
+                for (final category in [
+                  'Desenvolvimento',
+                  'Reunião',
+                  'Code Review',
+                  'Design',
+                ])
                   _CategoryChip(
                     category: category,
                     selected: viewModel.selectedCategory == category,
@@ -263,28 +321,55 @@ class _CurrentSessionState extends State<_CurrentSession> {
                   final task = TextField(
                     controller: _taskController,
                     onChanged: viewModel.updateCurrentTask,
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
                     decoration: const InputDecoration(
                       labelText: 'Em que você está trabalhando agora?',
-                      labelStyle: TextStyle(color: Color(0xFF9298AD), fontSize: 13),
+                      labelStyle: TextStyle(
+                        color: Color(0xFF9298AD),
+                        fontSize: 13,
+                      ),
                       border: InputBorder.none,
                       filled: false,
                       contentPadding: EdgeInsets.zero,
                     ),
                   );
                   final timer = Column(
-                    crossAxisAlignment: compact ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+                    crossAxisAlignment: compact
+                        ? CrossAxisAlignment.start
+                        : CrossAxisAlignment.end,
                     children: [
                       Text(
                         _formatClock(viewModel.sessionDuration),
-                        style: const TextStyle(fontSize: 38, fontWeight: FontWeight.w700, fontFamily: 'monospace'),
+                        style: const TextStyle(
+                          fontSize: 38,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: 'monospace',
+                        ),
                       ),
-                      const Text('Tempo desta sessão', style: TextStyle(color: Color(0xFF9298AD), fontFamily: 'monospace')),
+                      const Text(
+                        'Tempo desta sessão',
+                        style: TextStyle(
+                          color: Color(0xFF9298AD),
+                          fontFamily: 'monospace',
+                        ),
+                      ),
                     ],
                   );
                   return compact
-                      ? Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [task, const SizedBox(height: 12), timer])
-                      : Row(children: [Expanded(child: task), const SizedBox(width: 18), timer]);
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [task, const SizedBox(height: 12), timer],
+                        )
+                      : Row(
+                          children: [
+                            Expanded(child: task),
+                            const SizedBox(width: 18),
+                            timer,
+                          ],
+                        );
                 },
               ),
             ),
@@ -298,7 +383,9 @@ class _CurrentSessionState extends State<_CurrentSession> {
                   children: [
                     OutlinedButton.icon(
                       onPressed: viewModel.toggleTimer,
-                      icon: Icon(viewModel.isRunning ? Icons.pause : Icons.play_arrow),
+                      icon: Icon(
+                        viewModel.isRunning ? Icons.pause : Icons.play_arrow,
+                      ),
                       label: Text(viewModel.isRunning ? 'Pausar' : 'Retomar'),
                     ),
                     const SizedBox(width: 8),
@@ -348,12 +435,24 @@ class _CompletedTasks extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Tarefas Concluídas Hoje', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+                const Text(
+                  'Tarefas Concluídas Hoje',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                ),
                 const SizedBox(width: 10),
-                _Pill(label: '${entries.length} finalizadas', color: const Color(0xFFB7BDD2)),
+                _Pill(
+                  label: '${entries.length} finalizadas',
+                  color: const Color(0xFFB7BDD2),
+                ),
               ],
             ),
-            const Text('Soma Registrada: 03h 36m', style: TextStyle(color: Color(0xFF42D6A3), fontFamily: 'monospace')),
+            const Text(
+              'Soma Registrada: 03h 36m',
+              style: TextStyle(
+                color: Color(0xFF42D6A3),
+                fontFamily: 'monospace',
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 12),
@@ -395,13 +494,40 @@ class _EntryRow extends StatelessWidget {
     );
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Color(0xFF252E43)))),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Color(0xFF252E43))),
+      ),
       child: Row(
         children: [
-          Expanded(flex: 5, child: Text(header ? 'TAREFA / DESCRIÇÃO' : entry!.title, style: style, maxLines: 2, overflow: TextOverflow.ellipsis)),
-          Expanded(flex: 2, child: Text(header ? 'CATEGORIA' : entry!.category, style: style)),
-          Expanded(flex: 2, child: Text(header ? 'HORÁRIO' : '${entry!.start} - ${entry!.end}', style: style, textAlign: TextAlign.center)),
-          Expanded(flex: 2, child: Text(header ? 'DURAÇÃO' : _formatHours(entry!.duration), style: style, textAlign: TextAlign.right)),
+          Expanded(
+            flex: 5,
+            child: Text(
+              header ? 'TAREFA / DESCRIÇÃO' : entry!.title,
+              style: style,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(header ? 'CATEGORIA' : entry!.category, style: style),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              header ? 'HORÁRIO' : '${entry!.start} - ${entry!.end}',
+              style: style,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              header ? 'DURAÇÃO' : _formatHours(entry!.duration),
+              style: style,
+              textAlign: TextAlign.right,
+            ),
+          ),
         ],
       ),
     );
@@ -409,7 +535,11 @@ class _EntryRow extends StatelessWidget {
 }
 
 class _CategoryChip extends StatelessWidget {
-  const _CategoryChip({required this.category, required this.selected, required this.onTap});
+  const _CategoryChip({
+    required this.category,
+    required this.selected,
+    required this.onTap,
+  });
 
   final String category;
   final bool selected;
@@ -426,11 +556,14 @@ class _CategoryChip extends StatelessWidget {
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            Icon(Icons.circle, size: 8, color: color),
-            const SizedBox(width: 6),
-            Text(category, style: const TextStyle(fontSize: 12)),
-          ]),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.circle, size: 8, color: color),
+              const SizedBox(width: 6),
+              Text(category, style: const TextStyle(fontSize: 12)),
+            ],
+          ),
         ),
       ),
     );
@@ -448,11 +581,28 @@ class _Pill extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-      decoration: BoxDecoration(color: color.withValues(alpha: .12), borderRadius: BorderRadius.circular(5)),
-      child: Row(mainAxisSize: MainAxisSize.min, children: [
-        if (icon != null) ...[Icon(icon, size: 14, color: color), const SizedBox(width: 6)],
-        Text(label, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600, fontFamily: 'monospace')),
-      ]),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: .12),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 14, color: color),
+            const SizedBox(width: 6),
+          ],
+          Text(
+            label,
+            style: TextStyle(
+              color: color,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'monospace',
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -464,7 +614,10 @@ class _Milestone extends StatelessWidget {
   final Color color;
 
   @override
-  Widget build(BuildContext context) => Text(label, style: TextStyle(color: color, fontSize: 11, fontFamily: 'monospace'));
+  Widget build(BuildContext context) => Text(
+    label,
+    style: TextStyle(color: color, fontSize: 11, fontFamily: 'monospace'),
+  );
 }
 
 String _formatHours(Duration duration) {
@@ -481,8 +634,8 @@ String _formatClock(Duration duration) {
 }
 
 Color _categoryColor(String category) => switch (category) {
-      'Reunião' || 'Reuniões' => const Color(0xFFF5AE4E),
-      'Code Review' => const Color(0xFF42D6A3),
-      'Design' || 'Design System' => const Color(0xFFB6A7FF),
-      _ => const Color(0xFFE4E9FF),
-    };
+  'Reunião' || 'Reuniões' => const Color(0xFFF5AE4E),
+  'Code Review' => const Color(0xFF42D6A3),
+  'Design' || 'Design System' => const Color(0xFFB6A7FF),
+  _ => const Color(0xFFE4E9FF),
+};
