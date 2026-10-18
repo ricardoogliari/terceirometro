@@ -27,7 +27,11 @@ class TrackerView extends StatelessWidget {
                   const SizedBox(height: 24),
                   _CurrentSession(viewModel: viewModel),
                   const SizedBox(height: 28),
-                  _CompletedTasks(entries: viewModel.recentEntries),
+                  _CompletedTasks(
+                    entries: viewModel.recentEntries,
+                    completedCount: viewModel.entries.length,
+                    registeredTime: viewModel.registeredTime,
+                  ),
                   const SizedBox(height: 24),
                   const Text(
                     'Estado gerenciado pelo ViewModel  •  Persistência via repositório',
@@ -152,18 +156,27 @@ class _LimitCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 12),
-            const Wrap(
+            Wrap(
               spacing: 18,
               runSpacing: 6,
               children: [
-                _Milestone(label: '00:00 (Início)', color: Color(0xFF9298AD)),
-                _Milestone(
+                const _Milestone(
+                  label: '00:00 (Início)',
+                  color: Color(0xFF9298AD),
+                ),
+                const _Milestone(
                   label: '04:00 (Intervalo)',
                   color: Color(0xFF9298AD),
                 ),
-                _Milestone(label: '05:18 (Atual)', color: Color(0xFF42D6A3)),
-                _Milestone(label: '07:30 (Aviso)', color: Color(0xFFF5AE4E)),
                 _Milestone(
+                  label: '${_formatHours(viewModel.totalWorked)} (Atual)',
+                  color: const Color(0xFF42D6A3),
+                ),
+                const _Milestone(
+                  label: '07:30 (Aviso)',
+                  color: Color(0xFFF5AE4E),
+                ),
+                const _Milestone(
                   label: '08:00 (Teto Máx.)',
                   color: Color(0xFF9298AD),
                 ),
@@ -277,14 +290,20 @@ class _CurrentSessionState extends State<_CurrentSession> {
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 _Pill(
-                  label: viewModel.isRunning ? 'GRAVANDO TEMPO' : 'PAUSADO',
+                  label: viewModel.isRunning
+                      ? 'GRAVANDO TEMPO'
+                      : viewModel.sessionDuration == Duration.zero
+                      ? 'PRONTO PARA INICIAR'
+                      : 'PAUSADO',
                   color: viewModel.isRunning
                       ? const Color(0xFF42D6A3)
+                      : viewModel.sessionDuration == Duration.zero
+                      ? const Color(0xFF72B7FF)
                       : const Color(0xFFF5AE4E),
                   icon: Icons.circle,
                 ),
                 const Text(
-                  'Sessão iniciada às 14:32',
+                  'Aguardando início da tarefa',
                   style: TextStyle(
                     color: Color(0xFF9298AD),
                     fontFamily: 'monospace',
@@ -386,13 +405,19 @@ class _CurrentSessionState extends State<_CurrentSession> {
                       icon: Icon(
                         viewModel.isRunning ? Icons.pause : Icons.play_arrow,
                       ),
-                      label: Text(viewModel.isRunning ? 'Pausar' : 'Retomar'),
+                      label: Text(
+                        viewModel.isRunning
+                            ? 'Pausar'
+                            : viewModel.sessionDuration == Duration.zero
+                            ? 'Iniciar'
+                            : 'Retomar',
+                      ),
                     ),
                     const SizedBox(width: 8),
                     TextButton.icon(
                       onPressed: () {
                         _taskController.clear();
-                        viewModel.updateCurrentTask('');
+                        viewModel.discardCurrentTask();
                       },
                       icon: const Icon(Icons.close),
                       label: const Text('Descartar'),
@@ -400,11 +425,16 @@ class _CurrentSessionState extends State<_CurrentSession> {
                   ],
                 ),
                 FilledButton.icon(
-                  onPressed: () {
-                    viewModel.toggleTimer();
-                    _taskController.text = 'Nova tarefa';
-                    viewModel.updateCurrentTask('Nova tarefa');
-                  },
+                  onPressed:
+                      viewModel.sessionDuration == Duration.zero ||
+                          viewModel.currentTask.trim().isEmpty
+                      ? null
+                      : () async {
+                          await viewModel.completeCurrentTask();
+                          if (!mounted) return;
+                          _taskController.text = 'Nova tarefa';
+                          viewModel.updateCurrentTask('Nova tarefa');
+                        },
                   icon: const Icon(Icons.check_circle_outline),
                   label: const Text('Concluir e Iniciar Nova Tarefa'),
                 ),
@@ -418,9 +448,15 @@ class _CurrentSessionState extends State<_CurrentSession> {
 }
 
 class _CompletedTasks extends StatelessWidget {
-  const _CompletedTasks({required this.entries});
+  const _CompletedTasks({
+    required this.entries,
+    required this.completedCount,
+    required this.registeredTime,
+  });
 
   final List<TimeEntry> entries;
+  final int completedCount;
+  final Duration registeredTime;
 
   @override
   Widget build(BuildContext context) {
@@ -441,14 +477,14 @@ class _CompletedTasks extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 _Pill(
-                  label: '${entries.length} finalizadas',
+                  label: '$completedCount finalizadas',
                   color: const Color(0xFFB7BDD2),
                 ),
               ],
             ),
-            const Text(
-              'Soma Registrada: 03h 36m',
-              style: TextStyle(
+            Text(
+              'Soma Registrada: ${_formatHours(registeredTime)}',
+              style: const TextStyle(
                 color: Color(0xFF42D6A3),
                 fontFamily: 'monospace',
               ),
@@ -507,10 +543,6 @@ class _EntryRow extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Text(header ? 'CATEGORIA' : entry!.category, style: style),
           ),
           Expanded(
             flex: 2,

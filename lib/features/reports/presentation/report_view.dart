@@ -25,13 +25,14 @@ class ReportView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _ReportHeading(
+                    completedCount: viewModel.entries.length,
                     onExport: () => _showExportDialog(context),
                     onAdd: () => _showAddEntryDialog(context),
                   ),
                   const SizedBox(height: 20),
                   _Metrics(viewModel: viewModel),
                   const SizedBox(height: 20),
-                  _Timeline(),
+                  _Timeline(entries: viewModel.chronologicalEntries),
                   const SizedBox(height: 20),
                   _ReportEntries(entries: viewModel.chronologicalEntries),
                 ],
@@ -165,8 +166,13 @@ class ReportView extends StatelessWidget {
 }
 
 class _ReportHeading extends StatelessWidget {
-  const _ReportHeading({required this.onExport, required this.onAdd});
+  const _ReportHeading({
+    required this.completedCount,
+    required this.onExport,
+    required this.onAdd,
+  });
 
+  final int completedCount;
   final VoidCallback onExport;
   final VoidCallback onAdd;
 
@@ -177,17 +183,17 @@ class _ReportHeading extends StatelessWidget {
       crossAxisAlignment: WrapCrossAlignment.center,
       runSpacing: 12,
       children: [
-        const Column(
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Diário de Tarefas',
               style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(
-              '24 de outubro de 2024  •  6 sessões gravadas',
-              style: TextStyle(color: Color(0xFF9298AD)),
+              '24 de outubro de 2024  •  $completedCount sessões gravadas',
+              style: const TextStyle(color: Color(0xFF9298AD)),
             ),
           ],
         ),
@@ -219,6 +225,10 @@ class _Metrics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final completedCount = viewModel.entries.length;
+    final averageMinutes = completedCount == 0
+        ? 0
+        : viewModel.registeredTime.inMinutes ~/ completedCount;
     final width = MediaQuery.sizeOf(context).width;
     final columns = width >= 1200
         ? 4
@@ -240,19 +250,19 @@ class _Metrics extends StatelessWidget {
           icon: Icons.timer_outlined,
           color: const Color(0xFF42D6A3),
         ),
-        const _MetricCard(
+        _MetricCard(
           label: 'TAREFAS CONCLUÍDAS',
-          value: '06',
+          value: completedCount.toString().padLeft(2, '0'),
           detail: 'concluídas hoje',
           icon: Icons.task_alt,
-          color: Color(0xFFB6A7FF),
+          color: const Color(0xFFB6A7FF),
         ),
-        const _MetricCard(
+        _MetricCard(
           label: 'MÉDIA POR TAREFA',
-          value: '53min',
+          value: '${averageMinutes.toString().padLeft(2, '0')}min',
           detail: 'pace diário',
           icon: Icons.speed,
-          color: Color(0xFFF5AE4E),
+          color: const Color(0xFFF5AE4E),
         ),
         _MetricCard(
           label: 'SALDO DO LIMITE DIÁRIO',
@@ -326,6 +336,10 @@ class _MetricCard extends StatelessWidget {
 }
 
 class _Timeline extends StatelessWidget {
+  const _Timeline({required this.entries});
+
+  final List<TimeEntry> entries;
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -390,39 +404,25 @@ class _Timeline extends StatelessWidget {
                         ],
                       ),
                     const SizedBox(height: 8),
-                    if (narrow)
-                      const Column(
+                    if (entries.isEmpty)
+                      const SizedBox(
+                        height: 104,
+                        child: Center(
+                          child: Text(
+                            'Nenhum registro de tempo hoje',
+                            style: TextStyle(color: Color(0xFF9298AD)),
+                          ),
+                        ),
+                      )
+                    else if (narrow)
+                      Column(
                         children: [
-                          _TimelineItem(
-                            time: '08:00 - 09:15',
-                            task: 'Refatoração de State Management',
-                            color: Color(0xFF5B4BEB),
-                          ),
-                          _TimelineItem(
-                            time: '09:30 - 11:15',
-                            task: 'Design Tokens M3',
-                            color: Color(0xFF42D6A3),
-                          ),
-                          _TimelineItem(
-                            time: '11:15 - 11:30',
-                            task: 'Alinhamento da equipe',
-                            color: Color(0xFFF5AE4E),
-                          ),
-                          _TimelineItem(
-                            time: '11:30 - 12:15',
-                            task: 'Code Review PR #142',
-                            color: Color(0xFF72B7FF),
-                          ),
-                          _TimelineItem(
-                            time: '13:45 - 14:45',
-                            task: 'Planejamento Estratégico Q4',
-                            color: Color(0xFFF5AE4E),
-                          ),
-                          _TimelineItem(
-                            time: '15:00 - 15:33',
-                            task: 'Fix Memory Leak',
-                            color: Color(0xFF5B4BEB),
-                          ),
+                          for (final entry in entries)
+                            _TimelineItem(
+                              time: '${entry.start} - ${entry.end}',
+                              task: entry.title,
+                              color: _timelineColor(entry.category),
+                            ),
                         ],
                       )
                     else
@@ -430,76 +430,12 @@ class _Timeline extends StatelessWidget {
                         height: 115,
                         child: Stack(
                           children: [
-                            Positioned(
-                              left: 0,
-                              top: 14,
-                              width: constraints.maxWidth * .13,
-                              height: 28,
-                              child: const _TimelineBar(
-                                label: 'State Mgmt',
-                                color: Color(0xFF5B4BEB),
+                            for (var index = 0; index < entries.length; index++)
+                              _timelineBar(
+                                entries[index],
+                                index,
+                                constraints.maxWidth,
                               ),
-                            ),
-                            Positioned(
-                              left: constraints.maxWidth * .15,
-                              top: 14,
-                              width: constraints.maxWidth * .18,
-                              height: 28,
-                              child: const _TimelineBar(
-                                label: 'M3 Tokens',
-                                color: Color(0xFF42D6A3),
-                              ),
-                            ),
-                            Positioned(
-                              left: constraints.maxWidth * .33,
-                              top: 14,
-                              width: constraints.maxWidth * .03,
-                              height: 28,
-                              child: const _TimelineBar(
-                                label: 'Sync',
-                                color: Color(0xFFF5AE4E),
-                              ),
-                            ),
-                            Positioned(
-                              left: constraints.maxWidth * .36,
-                              top: 14,
-                              width: constraints.maxWidth * .08,
-                              height: 28,
-                              child: const _TimelineBar(
-                                label: 'PR #142',
-                                color: Color(0xFF72B7FF),
-                              ),
-                            ),
-                            Positioned(
-                              left: constraints.maxWidth * .57,
-                              top: 14,
-                              width: constraints.maxWidth * .10,
-                              height: 28,
-                              child: const _TimelineBar(
-                                label: 'Planning',
-                                color: Color(0xFFF5AE4E),
-                              ),
-                            ),
-                            Positioned(
-                              left: constraints.maxWidth * .70,
-                              top: 14,
-                              width: constraints.maxWidth * .06,
-                              height: 28,
-                              child: const _TimelineBar(
-                                label: 'Fix',
-                                color: Color(0xFF5B4BEB),
-                              ),
-                            ),
-                            Positioned(
-                              left: constraints.maxWidth * .40,
-                              top: 60,
-                              width: constraints.maxWidth * .13,
-                              height: 28,
-                              child: const _TimelineBar(
-                                label: 'Intervalo / Almoço',
-                                color: Color(0xFF303950),
-                              ),
-                            ),
                           ],
                         ),
                       ),
@@ -508,18 +444,38 @@ class _Timeline extends StatelessWidget {
               },
             ),
             const SizedBox(height: 10),
-            const Wrap(
-              spacing: 14,
-              runSpacing: 6,
-              children: [
-                _Legend(label: 'Engenharia', color: Color(0xFF5B4BEB)),
-                _Legend(label: 'Design System', color: Color(0xFF42D6A3)),
-                _Legend(label: 'Reuniões', color: Color(0xFFF5AE4E)),
-                _Legend(label: 'Disponível', color: Color(0xFF303950)),
-              ],
-            ),
+            if (entries.isNotEmpty)
+              Wrap(
+                spacing: 14,
+                runSpacing: 6,
+                children: [
+                  for (final category
+                      in entries.map((entry) => entry.category).toSet())
+                    _Legend(label: category, color: _timelineColor(category)),
+                ],
+              ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _timelineBar(TimeEntry entry, int index, double maxWidth) {
+    final parts = entry.start.split(':');
+    final startMinutes = int.parse(parts[0]) * 60 + int.parse(parts[1]);
+    final relativeStart = startMinutes - 8 * 60;
+    final clippedStart = relativeStart.clamp(0, 600);
+    final clippedEnd = (relativeStart + entry.duration.inMinutes).clamp(0, 600);
+    if (clippedEnd <= clippedStart) return const SizedBox.shrink();
+
+    return Positioned(
+      left: maxWidth * (clippedStart / 600),
+      top: (14 + (index % 2) * 44).toDouble(),
+      width: maxWidth * ((clippedEnd - clippedStart) / 600),
+      height: 28,
+      child: _TimelineBar(
+        label: entry.title,
+        color: _timelineColor(entry.category),
       ),
     );
   }
@@ -626,7 +582,17 @@ class _ReportEntries extends StatelessWidget {
               ],
             ),
           ),
-          for (final entry in entries) _ReportEntryRow(entry: entry),
+          if (entries.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(24),
+              child: Text(
+                'Nenhum registro lançado hoje',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Color(0xFF9298AD)),
+              ),
+            )
+          else
+            for (final entry in entries) _ReportEntryRow(entry: entry),
         ],
       ),
     );
@@ -680,6 +646,13 @@ class _ReportEntryRow extends StatelessWidget {
     );
   }
 }
+
+Color _timelineColor(String category) => switch (category) {
+  'Reunião' || 'Reuniões' => const Color(0xFFF5AE4E),
+  'Code Review' => const Color(0xFF72B7FF),
+  'Design' || 'Design System' => const Color(0xFF42D6A3),
+  _ => const Color(0xFF5B4BEB),
+};
 
 String _formatHours(Duration duration) {
   final hours = duration.inHours.toString().padLeft(2, '0');

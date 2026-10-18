@@ -10,13 +10,31 @@ void main() {
       addTearDown(viewModel.dispose);
 
       await viewModel.load();
-      expect(viewModel.entries, hasLength(6));
+      expect(viewModel.entries, isEmpty);
+      expect(viewModel.totalWorked, Duration.zero);
 
       await viewModel.addManualEntry('Revisar documentação', 'Desenvolvimento');
 
-      expect(viewModel.entries, hasLength(7));
+      expect(viewModel.entries, hasLength(1));
       expect(viewModel.entries.first.title, 'Revisar documentação');
+      expect(viewModel.registeredTime, const Duration(minutes: 30));
       expect(viewModel.buildSummary(), contains('Revisar documentação'));
     },
   );
+
+  test('starts with zero counters and a paused timer', () async {
+    final viewModel = TimeTrackingViewModel(InMemoryTimeEntryRepository());
+    addTearDown(viewModel.dispose);
+
+    await viewModel.load();
+    expect(viewModel.sessionDuration, Duration.zero);
+    expect(viewModel.totalWorked, Duration.zero);
+    expect(viewModel.registeredTime, Duration.zero);
+    expect(viewModel.completion, 0);
+    expect(viewModel.isRunning, isFalse);
+
+    viewModel.toggleTimer();
+    expect(viewModel.isRunning, isTrue);
+    expect(viewModel.sessionDuration, Duration.zero);
+  });
 }

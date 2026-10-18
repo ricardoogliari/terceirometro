@@ -35,43 +35,14 @@ jobs:
     - name: Flutter Test
       run: flutter test
 
-    #- name: Flutter Build Web
-    #  run: flutter build web --release 
+    - name: Flutter Build Web
+      run: flutter build web --release 
 
     # Step 5: Deploy to Firebase Hosting
-    #- name: Deploy to Firebase Hosting
-    #  uses: FirebaseExtended/action-hosting-deploy@v0
-    #  with:
-    #    repoToken: '${{ secrets.GITHUB_TOKEN }}'
-    #    firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
-    #    channelId: live # 'live' deploys directly to your production URL
-    #    projectId: terceirometro-3fe61 # Replace with your Firebase Project ID
-  
-  build:
-    needs: validacao_pipeline
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          flutter-version: '3.47.2'
-      - id: pages
-        uses: actions/configure-pages@v5
-      - run: flutter build web --release --base-href "${{ steps.pages.outputs.base_path }}/"
-      - uses: actions/upload-pages-artifact@v4
-        with:
-          path: build/web
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+    - name: Deploy to Firebase Hosting
+      uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        repoToken: '${{ secrets.GITHUB_TOKEN }}'
+        firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+        channelId: live # 'live' deploys directly to your production URL
+        projectId: terceirometro-3fe61 # Replace with your Firebase Project ID

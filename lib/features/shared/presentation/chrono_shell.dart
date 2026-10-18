@@ -110,11 +110,6 @@ class _Sidebar extends StatelessWidget {
             selected: page == ChronoPage.report,
             route: '/report',
           ),
-          const _NavItem(
-            icon: Icons.settings_outlined,
-            label: 'Configurações',
-            route: '/report',
-          ),
           const Spacer(),
           const Card(
             child: Padding(

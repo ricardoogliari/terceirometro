@@ -18,12 +18,8 @@ class TimeTrackingViewModel extends ChangeNotifier {
   final TimeEntryRepository _repository;
   late final Timer _ticker;
   List<TimeEntry> _entries = const [];
-  Duration _sessionDuration = const Duration(
-    hours: 1,
-    minutes: 42,
-    seconds: 19,
-  );
-  bool _isRunning = true;
+  Duration _sessionDuration = Duration.zero;
+  bool _isRunning = false;
   bool _automaticLockEnabled = true;
   bool _isLoading = true;
   String _currentTask = 'Refatoração da camada de API do Flutter Web';
@@ -36,14 +32,13 @@ class TimeTrackingViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String get currentTask => _currentTask;
   String get selectedCategory => _selectedCategory;
-  Duration get totalWorked =>
-      const Duration(hours: 5, minutes: 18) +
-      (_sessionDuration - const Duration(hours: 1, minutes: 42, seconds: 19));
+  Duration get totalWorked => registeredTime + _sessionDuration;
   Duration get dailyLimit => const Duration(hours: 8);
   Duration get remainingTime => dailyLimit - totalWorked;
   double get completion =>
       (totalWorked.inSeconds / dailyLimit.inSeconds).clamp(0.0, 1.0);
-  Duration get registeredTime => const Duration(hours: 3, minutes: 36);
+  Duration get registeredTime =>
+      entries.fold(Duration.zero, (total, entry) => total + entry.duration);
 
   List<TimeEntry> get recentEntries => entries.take(3).toList(growable: false);
   List<TimeEntry> get chronologicalEntries =>
@@ -78,6 +73,13 @@ class TimeTrackingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void discardCurrentTask() {
+    _sessionDuration = Duration.zero;
+    _isRunning = false;
+    _currentTask = '';
+    notifyListeners();
+  }
+
   Future<void> addManualEntry(String title, String category) async {
     final now = TimeOfDayLabel.now();
     final entry = TimeEntry(
@@ -90,6 +92,28 @@ class TimeTrackingViewModel extends ChangeNotifier {
     );
     await _repository.addEntry(entry);
     _entries = await _repository.getEntries();
+    notifyListeners();
+  }
+
+  Future<void> completeCurrentTask() async {
+    final title = _currentTask.trim();
+    if (title.isEmpty || _sessionDuration == Duration.zero) return;
+
+    final completedAt = DateTime.now();
+    final completedDuration = _sessionDuration;
+    final startedAt = completedAt.subtract(completedDuration);
+    final entry = TimeEntry(
+      title: title,
+      category: _selectedCategory,
+      project: _selectedCategory == 'Reunião' ? 'Syncs' : 'Core App',
+      start: TimeOfDayLabel.format(startedAt),
+      end: TimeOfDayLabel.format(completedAt),
+      duration: completedDuration,
+    );
+    await _repository.addEntry(entry);
+    _entries = await _repository.getEntries();
+    _sessionDuration = Duration.zero;
+    _isRunning = true;
     notifyListeners();
   }
 
@@ -123,7 +147,10 @@ class TimeTrackingViewModel extends ChangeNotifier {
 
 class TimeOfDayLabel {
   static String now() {
-    final time = DateTime.now();
+    return format(DateTime.now());
+  }
+
+  static String format(DateTime time) {
     return '${time.hour.toString().padLeft(2, '0')}:'
         '${time.minute.toString().padLeft(2, '0')}';
   }
