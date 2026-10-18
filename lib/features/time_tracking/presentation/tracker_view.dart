@@ -34,7 +34,7 @@ class TrackerView extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   const Text(
-                    'Estado gerenciado pelo ViewModel  •  Persistência via repositório',
+                    'By Ricardo da Silva Ogliari',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Color(0xFF737B93), fontSize: 12),
                   ),

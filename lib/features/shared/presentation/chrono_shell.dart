@@ -84,11 +84,11 @@ class _Sidebar extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'ChronoTrack',
+                    'Perceirometro',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                   ),
                   Text(
-                    'v1.0.4  •  pro',
+                    'v1.0.0  •  pro',
                     style: TextStyle(color: Color(0xFF9298AD), fontSize: 12),
                   ),
                 ],
@@ -111,35 +111,6 @@ class _Sidebar extends StatelessWidget {
             route: '/report',
           ),
           const Spacer(),
-          const Card(
-            child: Padding(
-              padding: EdgeInsets.all(14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Atalhos Rápidos',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(height: 12),
-                  _Shortcut(label: 'Alternar Timer', keyLabel: 'Space'),
-                  SizedBox(height: 8),
-                  _Shortcut(label: 'Nova Tarefa', keyLabel: '⌘ N'),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 14),
-          const Row(
-            children: [
-              Icon(Icons.circle, size: 9, color: Color(0xFF42D6A3)),
-              SizedBox(width: 8),
-              Text(
-                'Sincronização Cloud',
-                style: TextStyle(color: Color(0xFF9298AD)),
-              ),
-            ],
-          ),
         ],
       ),
     );
@@ -161,36 +132,12 @@ class _TopBar extends StatelessWidget {
       ),
       child: Row(
         children: [
-          if (compact) ...[
-            const _BrandMark(),
-            const SizedBox(width: 10),
-            const Text(
-              'ChronoTrack',
-              style: TextStyle(fontWeight: FontWeight.w700),
-            ),
-          ] else ...[
-            const _StatusPill(),
-            const SizedBox(width: 18),
-            const SizedBox(
-              height: 32,
-              child: VerticalDivider(color: Color(0xFF303950)),
-            ),
-            const SizedBox(width: 18),
-            const Text('4h 32m', style: TextStyle(fontFamily: 'monospace')),
-            const SizedBox(width: 12),
-            const SizedBox(
-              width: 150,
-              child: LinearProgressIndicator(
-                value: .56,
-                minHeight: 6,
-                borderRadius: BorderRadius.all(Radius.circular(6)),
-                backgroundColor: Color(0xFF303950),
-                color: Color(0xFF42D6A3),
-              ),
-            ),
-            const SizedBox(width: 10),
-            const Text('56%', style: TextStyle(color: Color(0xFF9298AD))),
-          ],
+          const _BrandMark(),
+          const SizedBox(width: 10),
+          const Text(
+            'Terceirometro',
+            style: TextStyle(fontWeight: FontWeight.w700),
+          ),
           const Spacer(),
           IconButton(
             tooltip: 'Notificações',
@@ -202,29 +149,6 @@ class _TopBar extends StatelessWidget {
             onPressed: () {},
             icon: const Icon(Icons.help_outline),
           ),
-          if (!compact) ...[
-            const SizedBox(
-              height: 30,
-              child: VerticalDivider(color: Color(0xFF303950)),
-            ),
-            const CircleAvatar(
-              radius: 18,
-              backgroundColor: Color(0xFF344058),
-              child: Text('DP', style: TextStyle(fontSize: 12)),
-            ),
-            const SizedBox(width: 10),
-            const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Dev Pro', style: TextStyle(fontWeight: FontWeight.w600)),
-                Text(
-                  'Plano Foco',
-                  style: TextStyle(color: Color(0xFF9298AD), fontSize: 12),
-                ),
-              ],
-            ),
-          ],
         ],
       ),
     );
@@ -286,60 +210,6 @@ class _BrandMark extends StatelessWidget {
         borderRadius: BorderRadius.circular(9),
       ),
       child: const Icon(Icons.timer_outlined, color: Color(0xFFE4E9FF)),
-    );
-  }
-}
-
-class _StatusPill extends StatelessWidget {
-  const _StatusPill();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1B2B38),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: const Row(
-        children: [
-          Icon(Icons.circle, size: 9, color: Color(0xFF42D6A3)),
-          SizedBox(width: 7),
-          Text(
-            'EM ANDAMENTO',
-            style: TextStyle(
-              color: Color(0xFF42D6A3),
-              fontWeight: FontWeight.w700,
-              fontSize: 12,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Shortcut extends StatelessWidget {
-  const _Shortcut({required this.label, required this.keyLabel});
-
-  final String label;
-  final String keyLabel;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(label, style: const TextStyle(color: Color(0xFFB7BDD2))),
-        ),
-        Text(
-          keyLabel,
-          style: const TextStyle(
-            fontFamily: 'monospace',
-            color: Color(0xFFB7BDD2),
-          ),
-        ),
-      ],
     );
   }
 }
